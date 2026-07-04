@@ -8,7 +8,7 @@ bp = APIBlueprint("pacientes", __name__)
 
 @bp.get("/pacientes/<string:cpf>")
 @bp.auth_required(auth)
-@bp.output(PacienteSchema)
+
 def get_paciente_por_cpf(cpf):
     paciente = buscar_paciente_por_cpf(cpf)
 

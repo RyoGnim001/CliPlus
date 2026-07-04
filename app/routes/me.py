@@ -8,7 +8,6 @@ bp = APIBlueprint("me", __name__)
 @bp.get("/me")
 @bp.auth_required(auth)
 def get_me():
-    auth_uid = bp.current_app.extensions
     user = auth.current_user
 
     operador = supabase.table("usuarios")\
