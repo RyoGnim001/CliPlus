@@ -1,3 +1,6 @@
 #env supabase 
 
 uv add apiflask supabase python-dotenv
+
+#Templates HTML
+uv add weasyprint jinja2

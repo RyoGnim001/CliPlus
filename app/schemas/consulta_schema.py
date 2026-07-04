@@ -1,4 +1,4 @@
-from apiflask.fields import String, Date, DateTime
+from apiflask.fields import String, Float, Date, DateTime
 from apiflask.validators import Length, OneOf
 from apiflask import Schema
 
@@ -22,3 +22,4 @@ class ConsultaSchema(Schema):
     motivo          = String(required=False)
     status          = String(required=False, validate=OneOf(["agendada", "realizada", "cancelada"]))
     observacoes     = String(required=False)
+    valor           = Float(required=False)

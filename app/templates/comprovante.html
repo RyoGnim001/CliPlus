@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      color: #2c2c2a;
+      background: #fff;
+      padding: 32px;
+    }
+
+    .comprovante {
+      max-width: 680px;
+      margin: 0 auto;
+      border: 1px solid #d3d1c7;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    /* HEADER */
+    .header {
+      background: #E6F1FB;
+      padding: 24px 28px 20px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+
+    .header-info .nome-clinica {
+      font-size: 20px;
+      font-weight: bold;
+      color: #042C53;
+    }
+
+    .header-info .detalhe {
+      font-size: 12px;
+      color: #185FA5;
+      margin-top: 3px;
+    }
+
+    .logo-placeholder {
+      width: 64px;
+      height: 64px;
+      border-radius: 10px;
+      background: #B5D4F4;
+      border: 1px solid #85B7EB;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: #0C447C;
+      text-align: center;
+    }
+
+    .logo-placeholder img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 10px;
+    }
+
+    /* FAIXA AZUL */
+    .faixa {
+      background: #185FA5;
+      padding: 8px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .faixa .titulo {
+      font-size: 12px;
+      font-weight: bold;
+      color: #E6F1FB;
+      letter-spacing: 0.05em;
+    }
+
+    .faixa .numero {
+      font-size: 12px;
+      color: #B5D4F4;
+    }
+
+    /* CORPO */
+    .corpo {
+      padding: 20px 28px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .secao-titulo {
+      font-size: 11px;
+      font-weight: bold;
+      color: #185FA5;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    td {
+      padding: 4px 0;
+      vertical-align: top;
+    }
+
+    td.label {
+      color: #5F5E5A;
+      width: 95px;
+    }
+
+    td.valor {
+      color: #2c2c2a;
+    }
+
+    td.valor.destaque {
+      font-weight: bold;
+    }
+
+    .badge {
+      background: #E6F1FB;
+      color: #185FA5;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: bold;
+      display: inline-block;
+    }
+
+    .badge.pago { background: #EAF3DE; color: #3B6D11; }
+
+    /* OBSERVAÇÕES */
+    .observacoes {
+      margin: 0 28px;
+      border-top: 1px solid #d3d1c7;
+      padding: 14px 0;
+    }
+
+    .observacoes p {
+      font-size: 13px;
+      color: #5F5E5A;
+      margin-top: 6px;
+    }
+
+    /* RODAPÉ */
+    .rodape {
+      margin: 0 28px;
+      border-top: 1px solid #d3d1c7;
+      padding: 14px 0 20px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .rodape span {
+      font-size: 11px;
+      color: #888780;
+    }
+  </style>
+</head>
+<body>
+  <div class="comprovante">
+
+    <!-- HEADER -->
+    <div class="header">
+      <div class="header-info">
+        <div class="nome-clinica">{{ clinica.nome }}</div>
+        <div class="detalhe">{{ clinica.rua }}, {{ clinica.numero }} — {{ clinica.bairro }}</div>
+        <div class="detalhe">{{ clinica.cidade }} — {{ clinica.estado }}, {{ clinica.cep }}</div>
+        <div class="detalhe">CNPJ: {{ clinica.cnpj }}</div>
+      </div>
+      <div class="logo-placeholder">
+        {% if clinica.logo %}
+          <img src="{{ clinica.logo }}" alt="Logo">
+        {% else %}
+          Logo
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- FAIXA -->
+    <div class="faixa">
+      <span class="titulo">COMPROVANTE DE CONSULTA</span>
+      <span class="numero">#{{ consulta.id }} · {{ consulta.data_formatada }}</span>
+    </div>
+
+    <!-- CORPO -->
+    <div class="corpo">
+
+      <!-- DADOS DO PACIENTE -->
+      <div>
+        <div class="secao-titulo">Dados do paciente</div>
+        <table>
+          <tr>
+            <td class="label">Nome</td>
+            <td class="valor destaque">{{ paciente.nome_completo }}</td>
+          </tr>
+          <tr>
+            <td class="label">CPF</td>
+            <td class="valor">{{ paciente.cpf_formatado }}</td>
+          </tr>
+          <tr>
+            <td class="label">Nascimento</td>
+            <td class="valor">{{ paciente.data_nascimento_formatada }}</td>
+          </tr>
+          <tr>
+            <td class="label">Telefone</td>
+            <td class="valor">{{ paciente.telefone }}</td>
+          </tr>
+          <tr>
+            <td class="label">E-mail</td>
+            <td class="valor">{{ paciente.email }}</td>
+          </tr>
+          <tr>
+            <td class="label">Convênio</td>
+            <td class="valor">{{ paciente.convenio or 'Particular' }}</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- DADOS DA CONSULTA -->
+      <div>
+        <div class="secao-titulo">Dados da consulta</div>
+        <table>
+          <tr>
+            <td class="label">Data</td>
+            <td class="valor destaque">{{ consulta.data_hora_formatada }}</td>
+          </tr>
+          <tr>
+            <td class="label">Especialidade</td>
+            <td class="valor">{{ consulta.especialidade or '—' }}</td>
+          </tr>
+          <tr>
+            <td class="label">Motivo</td>
+            <td class="valor">{{ consulta.motivo or '—' }}</td>
+          </tr>
+          <tr>
+            <td class="label">Status</td>
+            <td class="valor">
+              <span class="badge pago">Pago</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="label">Valor</td>
+            <td class="valor destaque">R$ {{ consulta.valor_formatado }}</td>
+          </tr>
+          <tr>
+            <td class="label">Operador</td>
+            <td class="valor">{{ usuario.nome }}</td>
+          </tr>
+        </table>
+      </div>
+
+    </div>
+
+    <!-- OBSERVAÇÕES -->
+    <div class="observacoes">
+      <div class="secao-titulo">Observações</div>
+      <p>{{ consulta.observacoes or 'Nenhuma observação registrada.' }}</p>
+    </div>
+
+    <!-- RODAPÉ -->
+    <div class="rodape">
+      <span>Documento gerado em {{ data_geracao }}</span>
+      <span>Enviado para {{ paciente.email }}</span>
+    </div>
+
+  </div>
+</body>
+</html>
