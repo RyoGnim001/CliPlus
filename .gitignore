@@ -1,2 +1,20 @@
-.env
+# ambiente virtual
 .venv
+
+# variáveis de ambiente
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# arquivos de teste temporários
+teste_auth.py
+
+# uv
+.uv/
+
+# sistema operacional
+.DS_Store
+Thumbs.db

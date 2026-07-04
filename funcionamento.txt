@@ -1,0 +1,44 @@
+#Fluxo da aplicação 
+
+Frontend → POST /auth/login (Supabase direto, sem passar pelo ApiFlask)
+                    ↓
+             Supabase devolve JWT
+                    ↓
+Frontend → qualquer endpoint do ApiFlask enviando JWT no header
+                    ↓
+         ApiFlask valida o JWT com o Supabase
+                    ↓
+              Executa a lógica
+
+
+#Organização
+
+CLIPPLUS/
+├── app/
+│   ├── database/       → conexão com Supabase (supabase_client.py)
+│   ├── helpers/        → funções utilitárias (ex: decorator requer_auth)
+│   ├── models/         → modelos de dados (classes Python representando tabelas)
+│   ├── repository/     → queries no banco (camada que fala com o Supabase)
+│   ├── routes/         → endpoints do ApiFlask (auth, pacientes, consultas)
+│   ├── schemas/        → validação de entrada/saída dos endpoints (Marshmallow/Pydantic)
+│   └── services/       → lógica de negócio (ex: lógica de dedup de paciente)
+├── settings/
+├── .env                → variáveis de ambiente (SUPABASE_URL, SUPABASE_SERVICE_KEY)
+└── app.py              → inicialização da aplicação
+
+#Chamada
+
+route → service → repository → database
+
+
+#Criando os inits
+
+New-Item app/__init__.py -ItemType File
+New-Item app/database/__init__.py -ItemType File
+New-Item app/helpers/__init__.py -ItemType File
+New-Item app/models/__init__.py -ItemType File
+New-Item app/repository/__init__.py -ItemType File
+New-Item app/routes/__init__.py -ItemType File
+New-Item app/schemas/__init__.py -ItemType File
+New-Item app/services/__init__.py -ItemType File
+New-Item settings/__init__.py -ItemType File
