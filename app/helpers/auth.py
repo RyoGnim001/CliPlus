@@ -1,23 +1,18 @@
-from functools import wraps
-from flask import request, jsonify
+from apiflask.security import HTTPTokenAuth
 from app.database.supabase_client import supabase
 
-def requer_auth(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        auth_header = request.headers.get("Authorization")
+auth = HTTPTokenAuth(scheme="Bearer")
 
-        if not auth_header or not auth_header.startswith("Bearer "):
-            return jsonify({"erro": "Token não fornecido"}), 401
+@auth.verify_token
+def verify_token(token):
+    try:
+        response = supabase.auth.get_user(token)
+        if response is None or response.user is None:
+            return None
+        return response.user
+    except Exception:
+        return None
 
-        token = auth_header.split(" ")[1]
-
-        try:
-            user = supabase.auth.get_user(token)
-        except Exception:
-            return jsonify({"erro": "Token inválido ou expirado"}), 401
-
-        kwargs["auth_uid"] = user.user.id
-        return f(*args, **kwargs)
-
-    return decorated
+def get_auth_uid():
+    from flask import g
+    return g.get("current_user")

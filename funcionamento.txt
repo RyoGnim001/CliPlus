@@ -42,3 +42,27 @@ New-Item app/routes/__init__.py -ItemType File
 New-Item app/schemas/__init__.py -ItemType File
 New-Item app/services/__init__.py -ItemType File
 New-Item settings/__init__.py -ItemType File
+
+
+#fluxo do campo CPF
+
+Boa pergunta. Isso é uma decisão de frontend — o backend não faz isso sozinho. Deixa eu explicar como vai funcionar na prática:
+O frontend vai ter dois momentos:
+Momento 1 — quando o operador digita o CPF:
+O frontend chama GET /pacientes/{cpf} automaticamente (ex: quando o campo CPF perde o foco). Dois cenários:
+
+Retornou dados → preenche os campos do formulário automaticamente
+Retornou 404 → não faz nada, deixa os campos em branco para o operador preencher
+
+Momento 2 — quando o operador clica em salvar:
+O frontend sempre chama POST /consultas com tudo que está preenchido no formulário — independente se o paciente já existia ou não. O backend resolve internamente:
+POST /consultas recebe o CPF
+        ↓
+busca o CPF no banco
+        ↓
+Existe? → usa o id do paciente existente
+Não existe? → cria o paciente com os dados do formulário
+        ↓
+registra a consulta
+Ou seja, o frontend só faz duas chamadas simples: GET para checar o CPF e POST para salvar. Toda a lógica de "criar ou reaproveitar paciente" fica no backend, dentro do POST /consultas. O frontend não precisa saber se o paciente é novo ou não.
+Ficou claro?
