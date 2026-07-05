@@ -1,11 +1,12 @@
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.lib.units import cm
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, HRFlowable
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, HRFlowable, Image as RLImage
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT
 from datetime import datetime
 import io
+import os
 
 CLINICA = {
     "nome": "Clínica Saúde & Vida",
@@ -56,6 +57,13 @@ def gerar_pdf(paciente: dict, consulta: dict, usuario: dict) -> bytes:
 
     elementos = []
 
+    # LOGO
+    caminho_logo = os.path.join(os.path.dirname(__file__), "../templates/img/logo.png")
+    if os.path.exists(caminho_logo):
+        logo = RLImage(caminho_logo, width=2*cm, height=2*cm)
+    else:
+        logo = Paragraph("[Logo]", ParagraphStyle("logo", fontName="Helvetica", fontSize=9, textColor=AZUL_MEDIO, alignment=TA_CENTER))
+
     # HEADER
     header_data = [[
         Table([
@@ -64,7 +72,7 @@ def gerar_pdf(paciente: dict, consulta: dict, usuario: dict) -> bytes:
             [Paragraph(CLINICA["cidade"], estilo_label)],
             [Paragraph(CLINICA["cnpj"],   estilo_label)],
         ], colWidths=[11*cm]),
-        Paragraph("[Logo]", ParagraphStyle("logo", fontName="Helvetica", fontSize=9, textColor=AZUL_MEDIO, alignment=TA_CENTER))
+        logo
     ]]
     header_table = Table(header_data, colWidths=[13*cm, 3*cm])
     header_table.setStyle(TableStyle([
