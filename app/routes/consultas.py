@@ -6,6 +6,7 @@ from app.services.email_service import enviar_comprovante
 from app.helpers.auth import auth
 from app.database.supabase_client import supabase
 from app.schemas.consulta_schema import ConsultaSchema
+from postgrest.exceptions import APIError
 
 bp = APIBlueprint("consultas", __name__)
 
@@ -40,3 +41,27 @@ def post_consulta(dados):
             print(f"Erro ao enviar email: {e}")
 
     return jsonify(resultado), 201
+
+@bp.get("/consultas")
+@bp.auth_required(auth)
+def get_consultas():
+    consultas = supabase.table("consultas")\
+        .select("*, pacientes(nome_completo, cpf), usuarios(nome)")\
+        .order("criado_em", desc=True)\
+        .execute()
+
+    return jsonify(consultas.data), 200
+
+@bp.get("/consultas/<int:consulta_id>")
+@bp.auth_required(auth)
+def get_consulta(consulta_id):
+    try:
+        consulta = supabase.table("consultas")\
+            .select("*, pacientes(*), usuarios(nome)")\
+            .eq("id", consulta_id)\
+            .single()\
+            .execute()
+    except APIError:
+        return jsonify({"erro": "Consulta não encontrada"}), 404
+
+    return jsonify(consulta.data), 200
