@@ -1,3 +1,4 @@
+from flask import g
 from apiflask.security import HTTPTokenAuth
 from app.database.supabase_client import supabase
 
@@ -9,10 +10,10 @@ def verify_token(token):
         response = supabase.auth.get_user(token)
         if response is None or response.user is None:
             return None
+        g.current_user = response.user  # <-- adiciona isso
         return response.user
     except Exception:
         return None
 
 def get_auth_uid():
-    from flask import g
     return g.get("current_user")
